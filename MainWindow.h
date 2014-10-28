@@ -9,9 +9,11 @@
 #include <QHBoxLayout><
 #include <QPushButton>
 
-namespace Ui {
+#include "Canvas.h"
+
+/*namespace Ui {
 class MainWindow;
-}
+}*/
 
 class MainWindow : public QMainWindow
 {
@@ -25,20 +27,22 @@ private:
 
     void initMainWindow();
     void createButtonBox();
-    void createCanvasBox();
+    void createCanvas();
     void createTextBox();
 
     QWidget *m_wdg;
 
-    QHBoxLayout *mainLayout;
+    QVBoxLayout *mainLayout;
 
     QGroupBox *buttonBox;
     QGroupBox *canvasBox;
+
     QLabel *waitingTime;
     QPushButton *FCFSButton;
     QPushButton *SJFButton;
     QPushButton *RRButton;
     QPushButton *MLButton;
+    Canvas *canvas;
 
     QMenu *fileMenu;
     QAction *exitAction;

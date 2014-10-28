@@ -18,12 +18,14 @@ MainWindow::~MainWindow()
 }
 
 void MainWindow::initMainWindow() {
-    mainLayout = new QHBoxLayout();
+    mainLayout = new QVBoxLayout();
     m_wdg = new QWidget();
 
     createButtonBox();
+    createCanvas();
 
     mainLayout -> addWidget(buttonBox);
+    mainLayout -> addWidget(canvas);
     m_wdg -> setLayout(mainLayout);
 
     setCentralWidget(m_wdg);
@@ -46,10 +48,8 @@ void MainWindow::createButtonBox() {
     buttonBox -> setLayout(layout);
 }
 
-void MainWindow::createCanvasBox() {
-    canvasBox = new QGroupBox(tr("Visual representation"));
-    QGridLayout *layout = new QGridLayout;
-
+void MainWindow::createCanvas() {
+    canvas = new Canvas();
 }
 
 

@@ -14,9 +14,11 @@ TEMPLATE = app
 
 SOURCES +=\
     Main.cpp \
-    MainWindow.cpp
+    MainWindow.cpp \
+    Canvas.cpp
 
 HEADERS  += \
-    MainWindow.h
+    MainWindow.h \
+    Canvas.h
 
 FORMS    +=
