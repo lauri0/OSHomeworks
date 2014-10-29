@@ -6,8 +6,9 @@
 #include <QLabel>
 #include <QDialogButtonBox>
 #include <QVBoxLayout>
-#include <QHBoxLayout><
+#include <QHBoxLayout>
 #include <QPushButton>
+#include <QRadioButton>
 
 #include "Canvas.h"
 
@@ -28,14 +29,15 @@ private:
     void initMainWindow();
     void createButtonBox();
     void createCanvas();
-    void createTextBox();
+    void createPatternBox();
 
     QWidget *m_wdg;
 
-    QVBoxLayout *mainLayout;
+    QGridLayout *mainLayout;
 
     QGroupBox *buttonBox;
     QGroupBox *canvasBox;
+    QGroupBox *patternBox;
 
     QLabel *waitingTime;
     QPushButton *FCFSButton;

@@ -8,5 +8,6 @@ Canvas::Canvas() : QWidget()
 void Canvas::paintEvent(QPaintEvent *)
 {
     QPainter painter(this);
-    painter.fillRect(100, 100, 300, 100, Qt::black);
+    painter.setPen(Qt::black);
+    painter.drawRect(100, 50, 550, 50);
 }
