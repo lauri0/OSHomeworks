@@ -25,7 +25,6 @@ public:
     ~MainWindow();
 
 private:
-
     void initMainWindow();
     void createButtonBox();
     void createCanvas();
@@ -48,6 +47,13 @@ private:
 
     QMenu *fileMenu;
     QAction *exitAction;
+
+public slots:
+    void FCFSClicked();
+    void SJFClicked();
+    void RRClicked();
+    void MLClicked();
+
 };
 
 #endif // MAINWINDOW_H

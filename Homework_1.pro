@@ -15,10 +15,12 @@ TEMPLATE = app
 SOURCES +=\
     Main.cpp \
     MainWindow.cpp \
-    Canvas.cpp
+    Canvas.cpp \
+    AlgorithmHandler.cpp
 
 HEADERS  += \
     MainWindow.h \
-    Canvas.h
+    Canvas.h \
+    AlgorithmHandler.h
 
 FORMS    +=

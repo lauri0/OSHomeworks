@@ -43,6 +43,11 @@ void MainWindow::createButtonBox() {
     RRButton = new QPushButton(tr("RR"));
     MLButton = new QPushButton(tr("ML"));
 
+    connect(FCFSButton, SIGNAL(clicked()), this, SLOT(FCFSClicked()));
+    connect(SJFButton, SIGNAL(clicked()), this, SLOT(SJFClicked()));
+    connect(RRButton, SIGNAL(clicked()), this, SLOT(RRClicked()));
+    connect(MLButton, SIGNAL(clicked()), this, SLOT(MLClicked()));
+
     layout -> addWidget(FCFSButton);
     layout -> addWidget(SJFButton);
     layout -> addWidget(RRButton);
@@ -78,4 +83,18 @@ void MainWindow::createPatternBox() {
     patternBox -> setLayout(layout);
 }
 
+void MainWindow::FCFSClicked() {
+    canvas -> changeAlgorithm("FCFS");
+}
 
+void MainWindow::SJFClicked() {
+    canvas -> changeAlgorithm("SJF");
+}
+
+void MainWindow::RRClicked() {
+    canvas -> changeAlgorithm("RR");
+}
+
+void MainWindow::MLClicked() {
+    canvas -> changeAlgorithm("ML");
+}
