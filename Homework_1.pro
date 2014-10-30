@@ -24,3 +24,5 @@ HEADERS  += \
     AlgorithmHandler.h
 
 FORMS    +=
+
+CONFIG += c++11

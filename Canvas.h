@@ -6,7 +6,8 @@
 #include <string>
 #include <iostream>
 
-using namespace std;
+using std::string;
+using std::cout;
 
 class Canvas : public QWidget
 {

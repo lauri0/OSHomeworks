@@ -8,6 +8,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     setFixedSize(800, 600);
     setWindowTitle("Planning algorithms");
+    initAlgorithmHandler();
     initMainWindow();
 
 }
@@ -15,6 +16,10 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow()
 {
     //Nothing here atm
+}
+
+void MainWindow::initAlgorithmHandler() {
+    handler = new AlgorithmHandler;
 }
 
 void MainWindow::initMainWindow() {
@@ -68,33 +73,84 @@ void MainWindow::createCanvas() {
 
 void MainWindow::createPatternBox() {
     patternBox = new QGroupBox(tr("Pattern"));
-    QVBoxLayout *layout = new QVBoxLayout;
+    QGridLayout *layout = new QGridLayout;
 
     QRadioButton *first = new QRadioButton(tr("First"));
     QRadioButton *second = new QRadioButton(tr("Second"));
     QRadioButton *third = new QRadioButton(tr("Third"));
     QRadioButton *fourth = new QRadioButton(tr("Custom"));
 
-    layout -> addWidget(first);
-    layout -> addWidget(second);
-    layout -> addWidget(third);
-    layout -> addWidget(fourth);
+    connect(first, SIGNAL(toggled(bool)), this, SLOT(firstEnabled(bool)));
+    connect(second, SIGNAL(toggled(bool)), this, SLOT(secondEnabled(bool)));
+    connect(third, SIGNAL(toggled(bool)), this, SLOT(thirdEnabled(bool)));
+    connect(fourth, SIGNAL(toggled(bool)), this, SLOT(customEnabled(bool)));
+
+    firstLabel = new QLabel(handler -> getTask1());
+    secondLabel = new QLabel(handler -> getTask2());
+    thirdLabel = new QLabel(handler -> getTask3());
+    fourthLabel = new QLabel(handler -> getTask4());
+
+    layout -> addWidget(first, 0, 0);
+    layout -> addWidget(firstLabel, 0, 1);
+    layout -> addWidget(second, 1, 0);
+    layout -> addWidget(secondLabel, 1, 1);
+    layout -> addWidget(third, 2, 0);
+    layout -> addWidget(thirdLabel, 2, 1);
+    layout -> addWidget(fourth, 3, 0);
+    layout -> addWidget(fourthLabel, 3, 1);
 
     patternBox -> setLayout(layout);
 }
 
-void MainWindow::FCFSClicked() {
+void MainWindow::FCFSClicked()
+{
     canvas -> changeAlgorithm("FCFS");
 }
 
-void MainWindow::SJFClicked() {
+void MainWindow::SJFClicked()
+{
     canvas -> changeAlgorithm("SJF");
 }
 
-void MainWindow::RRClicked() {
+void MainWindow::RRClicked()
+{
     canvas -> changeAlgorithm("RR");
 }
 
-void MainWindow::MLClicked() {
+void MainWindow::MLClicked()
+{
     canvas -> changeAlgorithm("ML");
+}
+
+void MainWindow::firstEnabled(bool enabled)
+{
+    if (enabled == true)
+    {
+       handler -> setTaskVector(handler -> getTask1().toStdString());
+       cout << handler -> getTaskVector()[2][1];
+    }
+}
+
+void MainWindow::secondEnabled(bool enabled)
+{
+    if (enabled == true)
+    {
+       handler -> setTaskVector(handler -> getTask2().toStdString());
+    }
+}
+
+void MainWindow::thirdEnabled(bool enabled)
+{
+    if (enabled == true)
+    {
+       handler -> setTaskVector(handler -> getTask3().toStdString());
+    }
+}
+
+void MainWindow::customEnabled(bool enabled)
+{
+    if (enabled == true)
+    {
+       handler -> setTaskVector(handler -> getTask4().toStdString());
+    }
 }

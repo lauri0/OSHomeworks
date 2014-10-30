@@ -11,6 +11,7 @@
 #include <QRadioButton>
 
 #include "Canvas.h"
+#include "AlgorithmHandler.h"
 
 /*namespace Ui {
 class MainWindow;
@@ -26,9 +27,13 @@ public:
 
 private:
     void initMainWindow();
+    void initAlgorithmHandler();
+
     void createButtonBox();
     void createCanvas();
     void createPatternBox();
+
+    AlgorithmHandler *handler;
 
     QWidget *m_wdg;
 
@@ -45,6 +50,11 @@ private:
     QPushButton *MLButton;
     Canvas *canvas;
 
+    QLabel *firstLabel;
+    QLabel *secondLabel;
+    QLabel *thirdLabel;
+    QLabel *fourthLabel;
+
     QMenu *fileMenu;
     QAction *exitAction;
 
@@ -53,6 +63,11 @@ public slots:
     void SJFClicked();
     void RRClicked();
     void MLClicked();
+
+    void firstEnabled(bool enabled);
+    void secondEnabled(bool enabled);
+    void thirdEnabled(bool enabled);
+    void customEnabled(bool enabled);
 
 };
 
