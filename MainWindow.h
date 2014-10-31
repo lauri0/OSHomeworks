@@ -9,6 +9,7 @@
 #include <QHBoxLayout>
 #include <QPushButton>
 #include <QRadioButton>
+#include <QLineEdit>
 
 #include "Canvas.h"
 #include "AlgorithmHandler.h"
@@ -48,12 +49,20 @@ private:
     QPushButton *SJFButton;
     QPushButton *RRButton;
     QPushButton *MLButton;
+
+    QRadioButton *first;
+    QRadioButton *second;
+    QRadioButton *third;
+    QRadioButton *fourth;
+
     Canvas *canvas;
 
     QLabel *firstLabel;
     QLabel *secondLabel;
     QLabel *thirdLabel;
     QLabel *fourthLabel;
+
+    QLineEdit *customTextField;
 
     QMenu *fileMenu;
     QAction *exitAction;
@@ -68,6 +77,8 @@ public slots:
     void secondEnabled(bool enabled);
     void thirdEnabled(bool enabled);
     void customEnabled(bool enabled);
+
+    void customPatternChanged(QString qStr);
 
 };
 

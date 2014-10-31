@@ -81,11 +81,11 @@ void MainWindow::createPatternBox()
     patternBox = new QGroupBox(tr("Pattern"));
     QGridLayout *layout = new QGridLayout;
 
-    QRadioButton *first = new QRadioButton(tr("First"));
+    first = new QRadioButton(tr("First"));
     first -> setChecked(true);
-    QRadioButton *second = new QRadioButton(tr("Second"));
-    QRadioButton *third = new QRadioButton(tr("Third"));
-    QRadioButton *fourth = new QRadioButton(tr("Custom"));
+    second = new QRadioButton(tr("Second"));
+    third = new QRadioButton(tr("Third"));
+    fourth = new QRadioButton(tr("Custom"));
 
     connect(first, SIGNAL(toggled(bool)), this, SLOT(firstEnabled(bool)));
     connect(second, SIGNAL(toggled(bool)), this, SLOT(secondEnabled(bool)));
@@ -95,7 +95,11 @@ void MainWindow::createPatternBox()
     firstLabel = new QLabel(handler -> getTask1());
     secondLabel = new QLabel(handler -> getTask2());
     thirdLabel = new QLabel(handler -> getTask3());
-    fourthLabel = new QLabel(handler -> getTask4());
+
+    customTextField = new QLineEdit(this);
+    customTextField -> setMaxLength(18);
+
+    connect(customTextField, SIGNAL(textChanged(QString)), this, SLOT(customPatternChanged(QString)));
 
     layout -> addWidget(first, 0, 0);
     layout -> addWidget(firstLabel, 0, 1);
@@ -104,7 +108,7 @@ void MainWindow::createPatternBox()
     layout -> addWidget(third, 2, 0);
     layout -> addWidget(thirdLabel, 2, 1);
     layout -> addWidget(fourth, 3, 0);
-    layout -> addWidget(fourthLabel, 3, 1);
+    layout -> addWidget(customTextField, 3, 1);
 
     patternBox -> setLayout(layout);
 }
@@ -160,6 +164,16 @@ void MainWindow::customEnabled(bool enabled)
 {
     if (enabled == true)
     {
-       handler -> setTaskVector(handler -> getTask4().toStdString());
+       handler -> setTaskVector(customTextField -> text().toStdString());
+    }
+}
+
+void MainWindow::customPatternChanged(QString qStr)
+{
+    if (fourth -> isChecked() == true)
+    {
+        string str = qStr.toStdString();
+        cout << str << "\n";
+        handler -> setTaskVector(str);
     }
 }

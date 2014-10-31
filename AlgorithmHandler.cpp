@@ -11,6 +11,8 @@ AlgorithmHandler::AlgorithmHandler()
 
     currentAlgorithm = "FCFS";
 
+    averageWaitingTime = 0;
+
     setTaskVector(task1);
 }
 
