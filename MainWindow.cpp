@@ -19,11 +19,13 @@ MainWindow::~MainWindow()
     //Nothing here atm
 }
 
-void MainWindow::initAlgorithmHandler() {
+void MainWindow::initAlgorithmHandler()
+{
     handler = new AlgorithmHandler;
 }
 
-void MainWindow::initMainWindow() {
+void MainWindow::initMainWindow()
+{
     mainLayout = new QGridLayout;
     m_wdg = new QWidget();
 
@@ -40,7 +42,8 @@ void MainWindow::initMainWindow() {
     setCentralWidget(m_wdg);
 }
 
-void MainWindow::createButtonBox() {
+void MainWindow::createButtonBox()
+{
     buttonBox = new QGroupBox(tr("Algorithm"));
     QHBoxLayout *layout = new QHBoxLayout;
 
@@ -62,21 +65,24 @@ void MainWindow::createButtonBox() {
     buttonBox -> setLayout(layout);
 }
 
-void MainWindow::createCanvas() {
+void MainWindow::createCanvas()
+{
     canvasBox = new QGroupBox(tr("Visual representation"));
     QHBoxLayout *layout = new QHBoxLayout;
-    canvas = new Canvas();
+    canvas = new Canvas(handler);
 
     layout -> addWidget(canvas);
 
     canvasBox -> setLayout(layout);
 }
 
-void MainWindow::createPatternBox() {
+void MainWindow::createPatternBox()
+{
     patternBox = new QGroupBox(tr("Pattern"));
     QGridLayout *layout = new QGridLayout;
 
     QRadioButton *first = new QRadioButton(tr("First"));
+    first -> setChecked(true);
     QRadioButton *second = new QRadioButton(tr("Second"));
     QRadioButton *third = new QRadioButton(tr("Third"));
     QRadioButton *fourth = new QRadioButton(tr("Custom"));
@@ -106,6 +112,7 @@ void MainWindow::createPatternBox() {
 void MainWindow::FCFSClicked()
 {
     canvas -> changeAlgorithm("FCFS");
+    handler -> setCurrentAlgorithm("FCFS");
     vector< vector<string> > out = handler -> FCFS(handler -> getTaskVector());
     canvas -> changeAverageWaitingTime(handler -> getAverageWaitingTime());
 }

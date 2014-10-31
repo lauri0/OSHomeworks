@@ -9,6 +9,8 @@ AlgorithmHandler::AlgorithmHandler()
     task3 = "6,2;3,7;4,10";
     task4 = "";
 
+    currentAlgorithm = "FCFS";
+
     setTaskVector(task1);
 }
 
@@ -146,8 +148,29 @@ vector< vector<string> > AlgorithmHandler::FCFS(vector< vector<int> > inputVecto
     }
     // Calculate average waiting time
     averageWaitingTime = totalWait / output.size();
-    cout << averageWaitingTime;
-    cout << "\n";
+//    cout << averageWaitingTime;
+//    cout << "\n";
 
     return output;
+}
+
+vector< vector<string> > AlgorithmHandler::getCorrectProcessVector()
+{
+    vector< vector<string> > correctVector;
+    if (currentAlgorithm == "FCFS")
+    {
+        correctVector = FCFS(taskVector);
+    }
+
+    return correctVector;
+}
+
+string AlgorithmHandler::getCurrentAlgorithm()
+{
+    return currentAlgorithm;
+}
+
+void AlgorithmHandler::setCurrentAlgorithm(string algorithm)
+{
+    currentAlgorithm = algorithm;
 }
