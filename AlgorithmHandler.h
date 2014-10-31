@@ -5,6 +5,7 @@
 #include <vector>
 #include <QString>
 #include <sstream>
+#include <iostream>
 
 using std::string;
 using std::vector;
@@ -19,17 +20,22 @@ public:
     QString getTask3();
     QString getTask4();
 
+    vector< vector<int> > getTaskVector();
+    void setTaskVector(string input);
+    int getAverageWaitingTime();
+
     vector<string> split(string &s, char delim, vector<string> &elems);
     vector<string> split(string &s, char delim);
     vector< vector<int> > toVec(string input);
-    vector< vector<int> > getTaskVector();
-    void setTaskVector(string input);
+    vector< vector<string> > FCFS(vector< vector<int> > inputVector);
 
 private:
     string task1;
     string task2;
     string task3;
     string task4;
+
+    int averageWaitingTime;
 
     vector< vector<int> > taskVector;
 

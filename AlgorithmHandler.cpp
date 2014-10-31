@@ -5,8 +5,8 @@ using namespace std;
 AlgorithmHandler::AlgorithmHandler()
 {
     task1 = "0,10;4,5;12,4";
-    task2 = "0,5;1,6;3,4";
-    task3 = "5,2;5,7;5,10";
+    task2 = "0,5;7,6;8,4";
+    task3 = "6,2;3,7;4,10";
     task4 = "";
 
     setTaskVector(task1);
@@ -30,6 +30,21 @@ QString AlgorithmHandler::getTask3()
 QString AlgorithmHandler::getTask4()
 {
     return QString::fromStdString(task4);
+}
+
+vector< vector<int> > AlgorithmHandler::getTaskVector()
+{
+    return taskVector;
+}
+
+void AlgorithmHandler::setTaskVector(string input)
+{
+    taskVector = toVec(input);
+}
+
+int AlgorithmHandler::getAverageWaitingTime()
+{
+    return averageWaitingTime;
 }
 
 vector<string> AlgorithmHandler::split(string &s, char delim, vector<string> &elems)
@@ -72,12 +87,67 @@ vector< vector<int> > AlgorithmHandler::toVec(string input)
     return output;
 }
 
-vector< vector<int> > AlgorithmHandler::getTaskVector()
+vector< vector<string> > AlgorithmHandler::FCFS(vector< vector<int> > inputVector)
 {
-    return taskVector;
-}
+    vector< vector<string> > output;
+    // The number of the current process
+    int counter = 1;
+    // Where the process manager currently is
+    int trace = 0;
+    int totalWait = 0;
 
-void AlgorithmHandler::setTaskVector(string input)
-{
-    taskVector = toVec(input);
+    // Vector is sorted
+    std::sort(inputVector.begin(), inputVector.end(), [](std::vector<int> a, std::vector<int> b)
+    {
+        return a[0] < b[0];
+    });
+
+//    cout << inputVector[0][0];
+//    cout << "\n";
+
+    for (vector<int> task : inputVector)
+    {
+        int arrival = task[0];
+        int duration = task[1];
+
+        // If there is a hole between two processes a space with the right length will be added to the vector
+        if (arrival > trace)
+        {
+            vector<string> spaceVector;
+            spaceVector.push_back(" ");
+            spaceVector.push_back(to_string(arrival - trace));
+            output.push_back(spaceVector);
+
+            vector<string> processVector;
+            processVector.push_back("P" + to_string(counter));
+            processVector.push_back(to_string(duration));
+            output.push_back(processVector);
+
+            trace = arrival + duration;
+
+            counter += 1;
+        }
+        else
+        {
+            // Check for how long the process had to wait
+            if (arrival < trace)
+            {
+                totalWait += trace - arrival;
+            }
+            vector<string> processVector;
+            processVector.push_back("P" + to_string(counter));
+            processVector.push_back(to_string(duration));
+            output.push_back(processVector);
+
+            trace += duration;
+
+            counter += 1;
+        }
+    }
+    // Calculate average waiting time
+    averageWaitingTime = totalWait / output.size();
+    cout << averageWaitingTime;
+    cout << "\n";
+
+    return output;
 }

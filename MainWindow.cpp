@@ -2,6 +2,7 @@
 
 #include "MainWindow.h"
 
+using namespace std;
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent)
@@ -105,6 +106,8 @@ void MainWindow::createPatternBox() {
 void MainWindow::FCFSClicked()
 {
     canvas -> changeAlgorithm("FCFS");
+    vector< vector<string> > out = handler -> FCFS(handler -> getTaskVector());
+    canvas -> changeAverageWaitingTime(handler -> getAverageWaitingTime());
 }
 
 void MainWindow::SJFClicked()
@@ -127,7 +130,6 @@ void MainWindow::firstEnabled(bool enabled)
     if (enabled == true)
     {
        handler -> setTaskVector(handler -> getTask1().toStdString());
-       cout << handler -> getTaskVector()[2][1];
     }
 }
 

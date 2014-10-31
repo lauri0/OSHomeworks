@@ -14,11 +14,11 @@ class Canvas : public QWidget
 public:
     Canvas();
 
-    void changeAverageWaitingTime(string time);
+    void changeAverageWaitingTime(int time);
     void changeAlgorithm(string algorithm);
 
 private:
-    string averageWaitingTime;
+    string canAverageWaitingTime;
     string planningAlgorithm;
 
     void paintEvent(QPaintEvent *);

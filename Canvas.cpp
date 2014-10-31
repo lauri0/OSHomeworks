@@ -1,8 +1,10 @@
 #include "Canvas.h"
 
+using namespace std;
+
 Canvas::Canvas() : QWidget()
 {
-    averageWaitingTime = "0";
+    canAverageWaitingTime = "0";
 }
 
 void Canvas::paintEvent(QPaintEvent *)
@@ -11,15 +13,14 @@ void Canvas::paintEvent(QPaintEvent *)
     QPoint waitingPoint(200, 20);
     QPoint algorithmPoint(500, 20);
     painter.setPen(Qt::black);
-    painter.drawText(waitingPoint, QString::fromStdString("Average waiting time: " + averageWaitingTime));
+    painter.drawText(waitingPoint, QString::fromStdString("Average waiting time: " + canAverageWaitingTime));
     painter.drawRect(100, 50, 550, 50);
     painter.drawText(algorithmPoint, QString::fromStdString("Algorithm: " + planningAlgorithm));
-    cout << "Text";
 }
 
-void Canvas::changeAverageWaitingTime(string time)
+void Canvas::changeAverageWaitingTime(int time)
 {
-    averageWaitingTime = time;
+    canAverageWaitingTime = to_string(time);
     this -> update();
 }
 
