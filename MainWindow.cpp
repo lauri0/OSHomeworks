@@ -117,13 +117,18 @@ void MainWindow::FCFSClicked()
 {
     canvas -> changeAlgorithm("FCFS");
     handler -> setCurrentAlgorithm("FCFS");
-    vector< vector<string> > out = handler -> FCFS(handler -> getTaskVector());
-    canvas -> changeAverageWaitingTime(handler -> getAverageWaitingTime());
+//    vector< vector<string> > out = handler -> FCFS(handler -> getTaskVector());
+    canvas -> changeAverageWaitingTime();
+    canvas -> update();
 }
 
 void MainWindow::SJFClicked()
 {
     canvas -> changeAlgorithm("SJF");
+    handler -> setCurrentAlgorithm("SJF");
+//    vector< vector<string> > out = handler -> SJF(handler -> getTaskVector());
+    canvas -> update();
+    canvas -> changeAverageWaitingTime();
 }
 
 void MainWindow::RRClicked()
@@ -173,7 +178,6 @@ void MainWindow::customPatternChanged(QString qStr)
     if (fourth -> isChecked() == true)
     {
         string str = qStr.toStdString();
-        cout << str << "\n";
         handler -> setTaskVector(str);
     }
 }

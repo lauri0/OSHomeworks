@@ -34,9 +34,6 @@ void Canvas::paintEvent(QPaintEvent *)
     vector< vector<string> > correctProcessVector;
     correctProcessVector = handler -> getCorrectProcessVector();
 
-    cout << correctProcessVector[1][0];
-    cout << "\n";
-
     for (vector<string> process : correctProcessVector)
     {
         string processId = process[0];
@@ -76,9 +73,10 @@ void Canvas::paintEvent(QPaintEvent *)
 
 }
 
-void Canvas::changeAverageWaitingTime(int time)
+void Canvas::changeAverageWaitingTime()
 {
-    canAverageWaitingTime = to_string(time);
+    canAverageWaitingTime = to_string(handler -> getAverageWaitingTime());
+
     this -> update();
 }
 

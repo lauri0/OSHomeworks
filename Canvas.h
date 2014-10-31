@@ -16,7 +16,7 @@ class Canvas : public QWidget
 public:
     Canvas(AlgorithmHandler *handler);
 
-    void changeAverageWaitingTime(int time);
+    void changeAverageWaitingTime();
     void changeAlgorithm(string algorithm);
 
 private:

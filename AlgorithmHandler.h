@@ -22,14 +22,17 @@ public:
 
     vector< vector<int> > getTaskVector();
     void setTaskVector(string input);
-    int getAverageWaitingTime();
+    double getAverageWaitingTime();
     string getCurrentAlgorithm();
     void setCurrentAlgorithm(string algorithm);
 
     vector<string> split(string &s, char delim, vector<string> &elems);
     vector<string> split(string &s, char delim);
     vector< vector<int> > toVec(string input);
+
     vector< vector<string> > FCFS(vector< vector<int> > inputVector);
+    vector< vector<string> > SJF(vector< vector<int> > inputVector);
+
     vector< vector<string> > getCorrectProcessVector();
 
 private:
@@ -39,7 +42,7 @@ private:
     string task4;
     string currentAlgorithm;
 
-    int averageWaitingTime;
+    double averageWaitingTime;
 
     vector< vector<int> > taskVector;
 
