@@ -660,8 +660,6 @@ int AlgorithmHandler::calculateWaitFromOutputVector(vector< vector<string> > oVe
         if (pidString == vec[0])
         {
             lastRunning = waitTrace;
-            cout << to_string(lastRunning) << "\n";
-            //cout << to_string(oVector.size()) << "\n";
         }
     }
 
