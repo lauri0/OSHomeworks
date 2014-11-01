@@ -25,6 +25,7 @@ public:
     double getAverageWaitingTime();
     string getCurrentAlgorithm();
     void setCurrentAlgorithm(string algorithm);
+    vector< vector<string> > getCorrectProcessVector();
 
     vector<string> split(string &s, char delim, vector<string> &elems);
     vector<string> split(string &s, char delim);
@@ -32,8 +33,10 @@ public:
 
     vector< vector<string> > FCFS(vector< vector<int> > inputVector);
     vector< vector<string> > SJF(vector< vector<int> > inputVector);
+    vector< vector<string> > RR(vector< vector<int> > inputVector);
 
-    vector< vector<string> > getCorrectProcessVector();
+    int calculateWaitFromOutputVector(vector< vector<string> > oVector, int pid, int trace, int arrival);
+
 
 private:
     string task1;
@@ -43,6 +46,7 @@ private:
     string currentAlgorithm;
 
     double averageWaitingTime;
+    int timeQuantum;
 
     vector< vector<int> > taskVector;
 

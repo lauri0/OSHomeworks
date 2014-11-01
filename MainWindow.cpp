@@ -117,7 +117,6 @@ void MainWindow::FCFSClicked()
 {
     canvas -> changeAlgorithm("FCFS");
     handler -> setCurrentAlgorithm("FCFS");
-//    vector< vector<string> > out = handler -> FCFS(handler -> getTaskVector());
     canvas -> changeAverageWaitingTime();
     canvas -> update();
 }
@@ -126,14 +125,16 @@ void MainWindow::SJFClicked()
 {
     canvas -> changeAlgorithm("SJF");
     handler -> setCurrentAlgorithm("SJF");
-//    vector< vector<string> > out = handler -> SJF(handler -> getTaskVector());
-    canvas -> update();
     canvas -> changeAverageWaitingTime();
+    canvas -> update();
 }
 
 void MainWindow::RRClicked()
 {
     canvas -> changeAlgorithm("RR");
+    handler -> setCurrentAlgorithm("RR");
+    canvas -> changeAverageWaitingTime();
+    canvas -> update();
 }
 
 void MainWindow::MLClicked()

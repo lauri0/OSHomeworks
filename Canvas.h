@@ -26,7 +26,7 @@ private:
     string canAverageWaitingTime;
     string planningAlgorithm;
 
-    AlgorithmHandler *handler;
+    AlgorithmHandler* handler;
 
     AlgorithmHandler *getHandler();
     void paintEvent(QPaintEvent *);

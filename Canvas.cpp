@@ -23,9 +23,8 @@ void Canvas::paintEvent(QPaintEvent *)
     QPoint algorithmPoint(500, 20);
     painter.setPen(Qt::black);
     // Average waiting time is displayed
-    painter.drawText(waitingPoint, QString::fromStdString("Average waiting time: " + canAverageWaitingTime));
-    // The outline rectangle is
-//   painter.drawRect(100, 50, 550, 50);
+    painter.drawText(waitingPoint, QString::fromStdString("Average waiting time: " +
+                                                          to_string(handler -> getAverageWaitingTime())));
     // The name of the currently used planning algorithm is displayed
     painter.drawText(algorithmPoint, QString::fromStdString("Algorithm: " + planningAlgorithm));
 
@@ -76,8 +75,7 @@ void Canvas::paintEvent(QPaintEvent *)
 void Canvas::changeAverageWaitingTime()
 {
     canAverageWaitingTime = to_string(handler -> getAverageWaitingTime());
-
-    this -> update();
+    this -> repaint();
 }
 
 void Canvas::changeAlgorithm(string algorithm)

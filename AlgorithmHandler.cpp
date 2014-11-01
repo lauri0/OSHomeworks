@@ -12,6 +12,7 @@ AlgorithmHandler::AlgorithmHandler()
     currentAlgorithm = "FCFS";
 
     averageWaitingTime = 0.0;
+    timeQuantum = 4;
 
     setTaskVector(task1);
 }
@@ -147,10 +148,7 @@ vector< vector<string> > AlgorithmHandler::FCFS(vector< vector<int> > inputVecto
         }
     }
     // Calculate average waiting time
-//    cout << totalWait << "..." << inputVector.size() << "\n";
     averageWaitingTime = (double)totalWait / (double)inputVector.size();
-    cout << to_string(totalWait) << " " << to_string(inputVector.size()) << " ";
-    cout << to_string(averageWaitingTime) << "\n";
     return output;
 }
 
@@ -161,7 +159,7 @@ vector< vector<string> > AlgorithmHandler::SJF(vector< vector<int> > inputVector
     int numElems = inputVector.size();
     // Every subvector is given a third element, the process number in the order the processes come in(1, 2, 3, ...)
 
-    vector< vector<string> > output1;
+    vector< vector<string> > output;
     // Where the process manager currently is
     int trace = 0;
     int totalWait = 0;
@@ -179,7 +177,7 @@ vector< vector<string> > AlgorithmHandler::SJF(vector< vector<int> > inputVector
     }
 
 
-    for (int i = 0; i < numElems * 2; i++)
+    for (int i = 0; i < numElems * 3; i++)
     {
         vector< vector<int> > currentWaiting;
         for (int j = 0; j < numElems; j++)
@@ -199,7 +197,7 @@ vector< vector<string> > AlgorithmHandler::SJF(vector< vector<int> > inputVector
             vector<string> processVector;
             processVector.push_back("P" + to_string(addedProcessNum + 1));
             processVector.push_back(to_string(currentWaiting[0][1]));
-            output1.push_back(processVector);
+            output.push_back(processVector);
 
             inputVector[addedProcessNum][2] = 999;
 
@@ -222,17 +220,113 @@ vector< vector<string> > AlgorithmHandler::SJF(vector< vector<int> > inputVector
                 vector<string> spaceVector;
                 spaceVector.push_back(" ");
                 spaceVector.push_back(to_string(earliestArrival - trace));
-                output1.push_back(spaceVector);
+                output.push_back(spaceVector);
 
                 trace += earliestArrival - trace;
             }
         }
     }
     // Calculate average waiting time
-    cout << to_string(totalWait);
-    averageWaitingTime = (double)totalWait / (double)output1.size();
+    averageWaitingTime = (double)totalWait / (double)inputVector.size();
 
-    return output1;
+    return output;
+}
+
+// Round robin
+vector< vector<string> > AlgorithmHandler::RR(vector< vector<int> > inputVector)
+{
+    // The number of processes
+    int numElems = inputVector.size();
+    // Every subvector is given a third element, the process number in the order the processes come in(1, 2, 3, ...)
+
+    vector< vector<string> > output;
+    // Where the process manager currently is
+    int trace = 0;
+    int totalWait = 0;
+    // Counted from 0 to numElems - 1
+    int nextProcess = 0;
+
+    // Vector is sorted by start times
+    std::sort(inputVector.begin(), inputVector.end(), [](std::vector<int> a, std::vector<int> b)
+    {
+        return a[0] < b[0];
+    });
+
+    // The number of the process is added to every subvector
+    for (int i = 0; i < numElems; i++)
+    {
+        inputVector[i].push_back(i + 1);
+    }
+
+
+    for (int i = 0; i < numElems * 4; i++)
+    {
+        vector< vector<int> > currentWaiting;
+        for (int j = 0; j < numElems; j++)
+        {
+            if (inputVector[j][0] <= trace && inputVector[j][2] != 999)
+            {
+                currentWaiting.push_back(inputVector[j]);
+            }
+        }
+        // The correct process is determined and started
+        if (currentWaiting.size() >= 1)
+        {
+            // Check whether a full circle has been completed
+            if ((unsigned int)(nextProcess + 1) > currentWaiting.size())
+            {
+                nextProcess = 0;
+            }
+
+            int addedProcessNum = currentWaiting[nextProcess][2] - 1;
+            vector<string> processVector;
+            processVector.push_back("P" + to_string(addedProcessNum + 1));
+            // Checking whether the process is longer or equal to the time quantum or not
+            totalWait += calculateWaitFromOutputVector(output, addedProcessNum + 1, trace,
+                                                       inputVector[addedProcessNum][0]);
+
+            if (inputVector[addedProcessNum][1] > timeQuantum)
+            {
+                processVector.push_back(to_string(timeQuantum));
+                inputVector[addedProcessNum][1] -= timeQuantum;
+                trace += timeQuantum;
+                nextProcess += 1;
+            }
+            else
+            {
+                processVector.push_back(to_string(inputVector[addedProcessNum][1]));
+                inputVector[addedProcessNum][2] = 999;
+                trace += inputVector[addedProcessNum][1];
+            }
+
+            output.push_back(processVector);
+        }
+        // Finds how long the required pause is and adds that to the output vector
+        if (currentWaiting.size() == 0)
+        {
+            int earliestArrival = 1000;
+            for (int k = 0; k < numElems; k++)
+            {
+                if (inputVector[k][0] < earliestArrival && inputVector[k][2] != 999)
+                {
+                    earliestArrival = inputVector[k][0];
+                }
+            }
+            if (earliestArrival != 1000)
+            {
+                vector<string> spaceVector;
+                spaceVector.push_back(" ");
+                spaceVector.push_back(to_string(earliestArrival - trace));
+                output.push_back(spaceVector);
+
+                trace += earliestArrival - trace;
+            }
+        }
+    }
+    // Calculate average waiting time
+    averageWaitingTime = (double)totalWait / (double)inputVector.size();
+
+    return output;
 }
 
 vector< vector<string> > AlgorithmHandler::getCorrectProcessVector()
@@ -242,16 +336,15 @@ vector< vector<string> > AlgorithmHandler::getCorrectProcessVector()
     {
         correctVector = FCFS(taskVector);
     }
-    if (currentAlgorithm == "SJF")
+    else if (currentAlgorithm == "SJF")
     {
         correctVector = SJF(taskVector);
     }
-    if (currentAlgorithm == "RR")
+    else if (currentAlgorithm == "RR")
     {
-        // Placeholder
-        correctVector = SJF(taskVector);
+        correctVector = RR(taskVector);
     }
-    if (currentAlgorithm == "ML")
+    else if (currentAlgorithm == "ML")
     {
         // Placeholder
         correctVector = SJF(taskVector);
@@ -267,4 +360,41 @@ string AlgorithmHandler::getCurrentAlgorithm()
 void AlgorithmHandler::setCurrentAlgorithm(string algorithm)
 {
     currentAlgorithm = algorithm;
+}
+
+int AlgorithmHandler::calculateWaitFromOutputVector(vector< vector<string> > oVector, int pid, int trace,
+                                                    int arrival)
+{
+    if (oVector.size() == 0)
+    {
+        return 0;
+    }
+
+    int wait = 0;
+    int lastRunning = -1;
+    // Trace used for wait time calculations
+    int waitTrace = 0;
+    string pidString = "P" + to_string(pid);
+
+    for (vector<string> vec : oVector)
+    {
+        waitTrace += atoi(vec[1].c_str());
+        if (pidString == vec[0])
+        {
+            lastRunning = waitTrace;
+            cout << to_string(lastRunning) << "\n";
+            //cout << to_string(oVector.size()) << "\n";
+        }
+    }
+
+    if (lastRunning != -1)
+    {
+        wait = trace - lastRunning;
+    }
+    else
+    {
+        wait = trace - arrival;
+    }
+
+    return wait;
 }
