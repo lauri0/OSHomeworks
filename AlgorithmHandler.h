@@ -34,6 +34,7 @@ public:
     vector< vector<string> > FCFS(vector< vector<int> > inputVector);
     vector< vector<string> > SJF(vector< vector<int> > inputVector);
     vector< vector<string> > RR(vector< vector<int> > inputVector);
+    vector< vector<string> > ML(vector< vector<int> > inputVector);
 
     int calculateWaitFromOutputVector(vector< vector<string> > oVector, int pid, int trace, int arrival);
 
@@ -46,7 +47,9 @@ private:
     string currentAlgorithm;
 
     double averageWaitingTime;
-    int timeQuantum;
+    int timeQuantumRR;
+    int timeQuantumML0;
+    int timeQuantumML1;
 
     vector< vector<int> > taskVector;
 

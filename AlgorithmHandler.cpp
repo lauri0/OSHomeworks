@@ -12,7 +12,9 @@ AlgorithmHandler::AlgorithmHandler()
     currentAlgorithm = "FCFS";
 
     averageWaitingTime = 0.0;
-    timeQuantum = 4;
+    timeQuantumRR = 4;
+    timeQuantumML0 = 8;
+    timeQuantumML1 = 16;
 
     setTaskVector(task1);
 }
@@ -285,11 +287,11 @@ vector< vector<string> > AlgorithmHandler::RR(vector< vector<int> > inputVector)
             totalWait += calculateWaitFromOutputVector(output, addedProcessNum + 1, trace,
                                                        inputVector[addedProcessNum][0]);
 
-            if (inputVector[addedProcessNum][1] > timeQuantum)
+            if (inputVector[addedProcessNum][1] > timeQuantumRR)
             {
-                processVector.push_back(to_string(timeQuantum));
-                inputVector[addedProcessNum][1] -= timeQuantum;
-                trace += timeQuantum;
+                processVector.push_back(to_string(timeQuantumRR));
+                inputVector[addedProcessNum][1] -= timeQuantumRR;
+                trace += timeQuantumRR;
                 nextProcess += 1;
             }
             else
@@ -329,6 +331,209 @@ vector< vector<string> > AlgorithmHandler::RR(vector< vector<int> > inputVector)
     return output;
 }
 
+vector< vector<string> > AlgorithmHandler::ML(vector< vector<int> > inputVector)
+{
+    // Three vectors representing the queues are created
+    vector < vector<int> > q0;
+    vector < vector<int> > q1;
+    vector < vector<int> > q2;
+
+    q0 = inputVector;
+
+    // Output vector is qreated
+    vector < vector<string> > output;
+
+    // Incoming processes are sorted by their arrival times
+    std::sort(q0.begin(), q0.end(), [](std::vector<int> a, std::vector<int> b)
+    {
+        return a[0] < b[0];
+    });
+
+    int numElems = q0.size();
+
+    // Every process is given a process id
+    for (int i = 0; i < numElems; i++)
+    {
+        q0[i].push_back(i + 1);
+    }
+
+    // Total waiting time
+    int totalWait = 0;
+    int trace0 = 0;
+
+    // Queue 0
+    for (vector<int> task : q0)
+    {
+        int arrival = task[0];
+        int duration = task[1];
+        int pid = task[2];
+
+        // If there is a hole between two processes a space with the right length will be added to the vector
+        if (arrival > trace0)
+        {
+            // Check if there are processes in queue 1
+/*            if (q1.size() > 0)
+            {
+                vector<string> fromQ1;
+                fromQ1.push_back()
+            }*/
+            vector<string> spaceVector;
+            spaceVector.push_back(" ");
+            spaceVector.push_back(to_string(arrival - trace0));
+            output.push_back(spaceVector);
+
+            // Check whether the process has to be sent to queue 1
+            if (task[1] > timeQuantumML0)
+            {
+                vector<int> remainingTask;
+                remainingTask.push_back(arrival);
+                remainingTask.push_back(duration - timeQuantumML0);
+                // Remainingtask is also given the process id
+                remainingTask.push_back(pid);
+                q1.push_back(remainingTask);
+                duration = timeQuantumML0;
+            }
+
+            vector<string> processVector;
+            processVector.push_back("P" + to_string(pid));
+            processVector.push_back(to_string(duration));
+            output.push_back(processVector);
+
+            trace0 = arrival + duration;
+        }
+        else
+        {
+            // Check whether the process has to be sent to queue 1
+            if (task[1] > timeQuantumML0)
+            {
+                vector<int> remainingTask;
+                remainingTask.push_back(arrival);
+                remainingTask.push_back(duration - timeQuantumML0);
+                // Remainingtask is also given the process id
+                remainingTask.push_back(pid);
+                q1.push_back(remainingTask);
+                duration = timeQuantumML0;
+            }
+            // Check for how long the process had to wait
+            if (arrival < trace0)
+            {
+                totalWait += trace0 - arrival;
+            }
+            vector<string> processVector;
+            processVector.push_back("P" + to_string(pid));
+            processVector.push_back(to_string(duration));
+            output.push_back(processVector);
+
+            trace0 += duration;
+
+        }
+    }
+
+    // Queue 1
+    for (vector<int> task : q1)
+    {
+        int arrival = task[0];
+        int duration = task[1];
+        int pid = task[2];
+
+        // If there is a hole between two processes a space with the right length will be added to the vector
+        if (arrival > trace0)
+        {
+            vector<string> spaceVector;
+            spaceVector.push_back(" ");
+            spaceVector.push_back(to_string(arrival - trace0));
+            output.push_back(spaceVector);
+
+            // Check whether the process has to be sent to queue 2
+            if (task[1] > timeQuantumML1)
+            {
+                vector<int> remainingTask;
+                remainingTask.push_back(arrival);
+                remainingTask.push_back(duration - timeQuantumML1);
+                // Remainingtask is also given the process id
+                remainingTask.push_back(pid);
+                q2.push_back(remainingTask);
+                duration = timeQuantumML1;
+            }
+            vector<string> processVector;
+            processVector.push_back("P" + to_string(pid));
+            processVector.push_back(to_string(duration));
+            output.push_back(processVector);
+
+            trace0 = arrival + duration;
+        }
+        else
+        {
+            // Check whether the process has to be sent to queue 2
+            if (task[1] > timeQuantumML1)
+            {
+                vector<int> remainingTask;
+                remainingTask.push_back(arrival);
+                remainingTask.push_back(duration - timeQuantumML1);
+                // Remainingtask is also given the process id
+                remainingTask.push_back(pid);
+                q2.push_back(remainingTask);
+                duration = timeQuantumML1;
+            }
+            // Check for how long the process had to wait
+            if (arrival < trace0)
+            {
+                totalWait += calculateWaitFromOutputVector(output, pid, trace0, arrival);
+            }
+            vector<string> processVector;
+            processVector.push_back("P" + to_string(pid));
+            processVector.push_back(to_string(duration));
+            output.push_back(processVector);
+
+            trace0 += duration;
+
+        }
+    }
+
+    // Queue 2
+    for (vector<int> task : q2)
+    {
+        int arrival = task[0];
+        int duration = task[1];
+        int pid = task[2];
+
+        // If there is a hole between two processes a space with the right length will be added to the vector
+        if (arrival > trace0)
+        {
+            vector<string> spaceVector;
+            spaceVector.push_back(" ");
+            spaceVector.push_back(to_string(arrival - trace0));
+            output.push_back(spaceVector);
+
+            vector<string> processVector;
+            processVector.push_back("P" + to_string(pid));
+            processVector.push_back(to_string(duration));
+            output.push_back(processVector);
+
+            trace0 = arrival + duration;
+        }
+        else
+        {
+        // Check for how long the process had to wait
+            if (arrival < trace0)
+            {
+                totalWait += calculateWaitFromOutputVector(output, pid, trace0, arrival);
+            }
+            vector<string> processVector;
+            processVector.push_back("P" + to_string(pid));
+            processVector.push_back(to_string(duration));
+            output.push_back(processVector);
+
+            trace0 += duration;
+
+        }
+    }
+
+    averageWaitingTime = (double) totalWait / (double) inputVector.size();
+
+    return output;
+}
+
 vector< vector<string> > AlgorithmHandler::getCorrectProcessVector()
 {
     vector< vector<string> > correctVector;
@@ -346,8 +551,7 @@ vector< vector<string> > AlgorithmHandler::getCorrectProcessVector()
     }
     else if (currentAlgorithm == "ML")
     {
-        // Placeholder
-        correctVector = SJF(taskVector);
+        correctVector = ML(taskVector);
     }
     return correctVector;
 }

@@ -140,6 +140,9 @@ void MainWindow::RRClicked()
 void MainWindow::MLClicked()
 {
     canvas -> changeAlgorithm("ML");
+    handler -> setCurrentAlgorithm("ML");
+    canvas -> changeAverageWaitingTime();
+    canvas -> update();
 }
 
 void MainWindow::firstEnabled(bool enabled)
