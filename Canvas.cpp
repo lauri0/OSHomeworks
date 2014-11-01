@@ -84,3 +84,9 @@ void Canvas::changeAlgorithm(string algorithm)
     planningAlgorithm = algorithm;
     this -> update();
 }
+
+void Canvas::setDrawMultiplier(int m)
+{
+    drawMultiplier = m;
+    this -> update();
+}

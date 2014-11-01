@@ -32,6 +32,8 @@ void MainWindow::initMainWindow()
     createPatternBox();
     createButtonBox();
     createCanvas();
+    createMenuActions();
+    createMenus();
 
     mainLayout -> addWidget(patternBox, 0, 0);
     mainLayout -> addWidget(buttonBox, 1, 0);
@@ -113,6 +115,28 @@ void MainWindow::createPatternBox()
     patternBox -> setLayout(layout);
 }
 
+void MainWindow::createMenus()
+{
+    fileMenu = this -> menuBar() -> addMenu(tr("File"));
+    fileMenu -> addAction(exitAction);
+
+    optionsMenu = menuBar() -> addMenu(tr("Options"));
+    optionsMenu -> addAction(normalView);
+    optionsMenu -> addAction(compactView);
+}
+
+void MainWindow::createMenuActions()
+{
+    exitAction = new QAction(tr("Exit"), this);
+    connect(exitAction, SIGNAL(triggered()), this, SLOT(exitApp()));
+
+    compactView = new QAction(tr("Compact view"), this);
+    connect(compactView, SIGNAL(triggered()), this, SLOT(setCompactView()));
+
+    normalView = new QAction(tr("Normal view"), this);
+    connect(normalView, SIGNAL(triggered()), this, SLOT(setNormalView()));
+}
+
 void MainWindow::FCFSClicked()
 {
     canvas -> changeAlgorithm("FCFS");
@@ -184,4 +208,19 @@ void MainWindow::customPatternChanged(QString qStr)
         string str = qStr.toStdString();
         handler -> setTaskVector(str);
     }
+}
+
+void MainWindow::exitApp()
+{
+    QApplication::quit();
+}
+
+void MainWindow::setNormalView()
+{
+    canvas -> setDrawMultiplier(24);
+}
+
+void MainWindow::setCompactView()
+{
+    canvas -> setDrawMultiplier(16);
 }

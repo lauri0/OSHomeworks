@@ -18,6 +18,7 @@ public:
 
     void changeAverageWaitingTime();
     void changeAlgorithm(string algorithm);
+    void setDrawMultiplier(int m);
 
 private:
     int drawMultiplier;
