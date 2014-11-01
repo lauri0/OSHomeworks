@@ -372,15 +372,48 @@ vector< vector<string> > AlgorithmHandler::ML(vector< vector<int> > inputVector)
         if (arrival > trace0)
         {
             // Check if there are processes in queue 1
-/*            if (q1.size() > 0)
+            if (q1.size() > 0)
             {
+                totalWait += calculateWaitFromOutputVector(output, q1.front()[2], trace0, arrival);
+                int maxLength = arrival - trace0;
                 vector<string> fromQ1;
-                fromQ1.push_back()
-            }*/
-            vector<string> spaceVector;
-            spaceVector.push_back(" ");
-            spaceVector.push_back(to_string(arrival - trace0));
-            output.push_back(spaceVector);
+                if (q1.front()[1] <= maxLength && q1.front()[1] <= timeQuantumML1)
+                {
+                    fromQ1.push_back("P" + to_string(q1.front()[2]));
+                    q1.front()[2] = 999;
+                    fromQ1.push_back(to_string(q1.front()[1]));
+
+                    trace0 += q1.front()[1];
+                }
+                else if (maxLength > timeQuantumML1)
+                {
+                    fromQ1.push_back("P" + to_string(q1.front()[2]));
+                    q1.front()[1] -= timeQuantumML1;
+                    fromQ1.push_back(to_string(timeQuantumML1));
+
+                    trace0 += timeQuantumML1;
+                }
+                else
+                {
+                    fromQ1.push_back("P" + to_string(q1.front()[2]));
+                    q1.front()[1] -= maxLength;
+                    fromQ1.push_back(to_string(maxLength));
+
+                    trace0 += maxLength;
+                }
+
+                output.push_back(fromQ1);
+
+            }
+
+            // Check whether there is any space left after trying to insert a process from a lower level queue
+            if (arrival - trace0 > 0)
+            {
+                vector<string> spaceVector;
+                spaceVector.push_back(" ");
+                spaceVector.push_back(to_string(arrival - trace0));
+                output.push_back(spaceVector);
+            }
 
             // Check whether the process has to be sent to queue 1
             if (task[1] > timeQuantumML0)
@@ -432,6 +465,11 @@ vector< vector<string> > AlgorithmHandler::ML(vector< vector<int> > inputVector)
     // Queue 1
     for (vector<int> task : q1)
     {
+        if (task[2] == 999)
+        {
+            continue;
+        }
+
         int arrival = task[0];
         int duration = task[1];
         int pid = task[2];
@@ -439,10 +477,40 @@ vector< vector<string> > AlgorithmHandler::ML(vector< vector<int> > inputVector)
         // If there is a hole between two processes a space with the right length will be added to the vector
         if (arrival > trace0)
         {
-            vector<string> spaceVector;
-            spaceVector.push_back(" ");
-            spaceVector.push_back(to_string(arrival - trace0));
-            output.push_back(spaceVector);
+            // Check if there are processes in queue 1
+            if (q2.size() > 0)
+            {
+                totalWait += calculateWaitFromOutputVector(output, q2.front()[2], trace0, arrival);
+                int maxLength = arrival - trace0;
+                vector<string> fromQ2;
+                if (q2.front()[1] <= maxLength)
+                {
+                    fromQ2.push_back("P" + to_string(q2.front()[2]));
+                    q2.front()[2] = 999;
+                    fromQ2.push_back(to_string(q2.front()[1]));
+
+                    trace0 += q2.front()[1];
+                }
+                else
+                {
+                    fromQ2.push_back("P" + to_string(q2.front()[2]));
+                    q2.front()[1] -= maxLength;
+                    fromQ2.push_back(to_string(maxLength));
+
+                    trace0 += maxLength;
+                }
+
+                output.push_back(fromQ2);
+
+            }
+
+            if (arrival - trace0 > 0)
+            {
+                vector<string> spaceVector;
+                spaceVector.push_back(" ");
+                spaceVector.push_back(to_string(arrival - trace0));
+                output.push_back(spaceVector);
+            }
 
             // Check whether the process has to be sent to queue 2
             if (task[1] > timeQuantumML1)
@@ -480,6 +548,8 @@ vector< vector<string> > AlgorithmHandler::ML(vector< vector<int> > inputVector)
             {
                 totalWait += calculateWaitFromOutputVector(output, pid, trace0, arrival);
             }
+
+
             vector<string> processVector;
             processVector.push_back("P" + to_string(pid));
             processVector.push_back(to_string(duration));
@@ -493,6 +563,10 @@ vector< vector<string> > AlgorithmHandler::ML(vector< vector<int> > inputVector)
     // Queue 2
     for (vector<int> task : q2)
     {
+        if (task[2] == 999)
+        {
+            continue;
+        }
         int arrival = task[0];
         int duration = task[1];
         int pid = task[2];
